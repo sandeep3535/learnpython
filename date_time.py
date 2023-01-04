@@ -1,0 +1,22 @@
+import datetime
+
+a = datetime.datetime.now()
+print(a)
+print("Year:", a.strftime("%Y"))
+print("Year:", a.strftime("%y"))
+print("Month:", a.strftime("%B"))
+print("Month:", a.strftime("%b"))
+print("Day:", a.strftime("%A"))
+print("Day:", a.strftime("%a"))
+print("Hour:", a.strftime("%H"))
+print("Hour:", a.strftime("%I"))
+print("AM/PM:", a.strftime("%p"))
+print("Minute:", a.strftime("%M"))
+print("Second:", a.strftime("%S"))
+print("Micro-Seconds:", a.strftime("%f"))
+print()
+print()
+
+new_time = datetime.timedelta(days=365)
+print(a - new_time)
+print(a+new_time)
