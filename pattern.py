@@ -47,4 +47,3 @@ def pattern_D():
                 print(" ", end=" ")
         print("\r")
 
-pattern_D()
