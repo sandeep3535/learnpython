@@ -35,7 +35,7 @@ def pattern_C():
 
 
 def pattern_D():
-    for row in range(8):
+    for row in range(7):
         for colm in range(5):
             if row in range(0, 7) and colm == 0:
                 print("*", end=" ")
@@ -47,3 +47,4 @@ def pattern_D():
                 print(" ", end=" ")
         print("\r")
 
+pattern_D()
