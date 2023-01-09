@@ -1,4 +1,3 @@
-import csv
 import sqlite3
 
 
@@ -13,7 +12,7 @@ class Student:
     def create_database():
         conn = sqlite3.connect("student_data.db")
         c = conn.cursor()
-        c.execute(""" CREATE TABLE student 
+        c.execute(""" CREATE TABLE IF NOT EXISTS student 
                               (Name text,
                                Rollno int,
                                city text)""")
@@ -27,84 +26,79 @@ class Student:
         conn.commit()
         conn.close()
 
-
-    def search(self, word):
-        with open('D:/sandeep/Student_system.csv', 'r') as f:
-            csvreader = csv.reader(f)
-            for row in csvreader:
-                if word in row:
-                    print(f"Name: {row[0]}\n"
-                          f"Rollno: {row[1]}\n"
-                          f"City: {row[2]}")
-                    break
-            else:
-                print("Not found. Try again !")
-
-    def display(self):
-        with open('D:/sandeep/Student_system.csv', 'r') as f:
-            csvreader = csv.reader(f)
-            for row in csvreader:
-                print(f"Name: {row[0]}\n"
-                      f"Rollno: {row[1]}\n"
-                      f"City: {row[2]}\n")
-            print("===============================")
-
-    def update(self, roll_n):
-            for row in csvreader:
-                csv_lst.append(row)
-                if roll_n in row:
-                    print(f"Name: {row[0]}\n"
-                          f"Rollno: {row[1]}\n"
-                          f"City: {row[2]}\n")
-        for row in csv_lst:
-            if roll_n in row:
-                row[0] = input("Enter Name: ")
-                row[1] = input("Enter Rollno: ")
-                row[2] = input("Enter City: ")
-                print("====Updated Successfully====")
-                break
+    @staticmethod
+    def search(r_no):
+        conn = sqlite3.connect("student_data.db")
+        c = conn.cursor()
+        c.execute(f"SELECT * FROM student WHERE Rollno = {r_no}")
+        result = c.fetchall()
+        if len(result) != 0:
+            print(f"Name: {result[0][0]}\n"
+                  f"Rollno: {result[0][1]}\n"
+                  f"City: {result[0][2]}")
         else:
             print("Not found. Try again !")
-        with open('D:/sandeep/Student_system.csv', 'w') as f:
-            pass
-        for row in csv_lst:
-            f = open('D:/sandeep/Student_system.csv', 'a', newline="")
-            writer = csv.writer(f)
-            writer.writerow(row)
-            f.close()
+        conn.commit()
+        conn.close()
+
+    @staticmethod
+    def display(lmt):
+        conn = sqlite3.connect("student_data.db")
+        c = conn.cursor()
+        c.execute(f"SELECT * FROM student LIMIT {lmt} ")
+        result = c.fetchall()
+        for row in range(len(result)):
+            print(f"Name: {result[row][0]}\n"
+                  f"Rollno: {result[row][1]}\n"
+                  f"City: {result[row][2]}\n")
+        conn.commit()
+        conn.close()
+
+    @staticmethod
+    def update(roll_n):
+        conn = sqlite3.connect("student_data.db")
+        c = conn.cursor()
+        c.execute("SELECT * FROM student WHERE Rollno = ?", (roll_n,))
+        result = c.fetchall()
+        if len(result) != 0:
+            print()
+            n = input("Enter Name: ")
+            r = int(input("Enter Rollno: "))
+            ct = input("Enter City: ")
+            c.execute(f"UPDATE student SET Name = ?, Rollno = ?, City = ? WHERE Rollno = ?", (n, r, ct, roll_n))
+            print("====Updated Successfully====")
+            conn.commit()
+            conn.close()
+        else:
+            conn.commit()
+            conn.close()
+            return
 
     def delete(self, rol_n):
-        with open('D:/sandeep/Student_system.csv', 'r') as f:
-            csvreader = csv.reader(f)
-            csv_lst = []
-            for row in csvreader:
-                csv_lst.append(row)
-                if rol_n in row:
-                    print(f"Name: {row[0]}\n"
-                          f"Rollno: {row[1]}\n"
-                          f"City: {row[2]}\n")
-        for row in csv_lst:
-            if rol_n in row:
-                con = input("Are you sure? Y/N: ")
-                if con == ("Y" or "y"):
-                    csv_lst.remove(row)
-                    print("====Deleted Successfully====")
-                    break
-                break
+        conn = sqlite3.connect("student_data.db")
+        c = conn.cursor()
+        c.execute("SELECT * FROM student WHERE Rollno = ?", (rol_n,))
+        result = c.fetchall()
+        if len(result) != 0:
+            cond = input("Are you sure? Y/N: ")
+            if cond == "Y" or cond == "y":
+                c.execute("DELETE FROM student WHERE Rollno = ?", (rol_n,))
+                print("====Deleted Successfully====")
+                conn.commit()
+                conn.close()
+                return
+            else:
+                conn.commit()
+                conn.close()
+                return
         else:
-            print("Not found. Try again !")
-
-        with open('D:/sandeep/Student_system.csv', 'w') as f:
-            pass
-        for row in csv_lst:
-            f = open('D:/sandeep/Student_system.csv', 'a', newline="")
-            writer = csv.writer(f)
-            writer.writerow(row)
-            f.close()
+            conn.commit()
+            conn.close()
+            return
 
 
 if __name__ == "__main__":
-
+    Student.create_database()
     print("=========Welcome=========")
     while True:
         print("===============================")
@@ -128,19 +122,22 @@ if __name__ == "__main__":
                 print("===============================")
                 print("Please enter valid input..!")
         elif cntn == 2:
+            limit = input("Enter the no of rows you want to display: ")
             std_1 = Student()
-            std_1.display()
+            std_1.display(limit)
         elif cntn == 3:
-            word = input("Please enter rollno for search: ")
+            r_no = input("Please enter rollno for search: ")
             std_1 = Student()
-            std_1.search(word)
+            std_1.search(r_no)
         elif cntn == 4:
             roll_n = input("Please enter rollno for update: ")
             std_1 = Student()
+            std_1.search(roll_n)
             std_1.update(roll_n)
         elif cntn == 5:
             rol_n = input("Please enter rollno for delete: ")
             std_1 = Student()
+            std_1.search(rol_n)
             std_1.delete(rol_n)
         else:
             break
