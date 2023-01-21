@@ -34,7 +34,7 @@ def pattern_C():
         print("\r")
 
 
-def pattern_D():
+def pattern_d():
     for row in range(7):
         for colm in range(5):
             if row in range(0, 7) and colm == 0:
