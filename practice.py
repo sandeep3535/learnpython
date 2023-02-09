@@ -5,7 +5,6 @@ print(totp)
 
 """
 
-
 """
 import requests
 client_ip = requests.get('https://api.ipify.org').text
@@ -51,7 +50,6 @@ async def main():
     await asyncio.gather(task1, task2)
 """
 
-
 """
 import asyncio
 
@@ -73,7 +71,6 @@ async def main():
 asyncio.run(main())
 """
 
-
 """
 import logging
 
@@ -94,6 +91,32 @@ logger.info("Just an information")
 logger.warning("Its a Warning")
 logger.error("Did you try to divide by zero")
 logger.critical("Internet is down")
+"""
+
+
+"""
+class Test:
+    __instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if not cls.__instance:
+            cls.__instance = cls()
+        return cls.__instance
+
+    def __init__(self):
+        if Test.__instance is None:
+            Test.__instance = self
+        else:
+            raise Exception("You can not Create Multiple Instance of Angel Instrument Class")
+
+
+n_obj = Test()
+l_obj = Test()
+
+
+print(n_obj.__str__())
+print(l_obj.__str__())
 """
 
 
