@@ -121,23 +121,25 @@ print(l_obj.__str__())
 """
 import asyncio
 
-async def put_queue(word):
-    q = asyncio.Queue(maxsize=2)
-    q.put_nowait(word)
-    q.put_nowait(word)
-    q.put_nowait(word)
-    print(q)
-
 async def put_nowait_queue(word):
     q = asyncio.Queue(maxsize=2)
+    q.put_nowait(word)
+    q.put_nowait(word)
+    que = q.get_nowait()
+    print(que)
+
+async def put_queue(word):
+    q = asyncio.Queue(maxsize=2)
     await q.put(word)
     await q.put(word)
     await q.put(word)
     print(q)
+
 async def main():
-    await put_queue("sandeep")
+    await put_nowait_queue("sandeep")
 
 
 asyncio.run(main())
 """
+
 
